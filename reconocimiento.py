@@ -332,7 +332,7 @@ def controlusuarios():
         else:
             messagebox.showerror(title="Contraseña Incorrecta",
                                  message='Error¡¡¡ \n las contraseñas no coinciden.')
-    buttons = tk.Button(admin, text='Registrar !', command=controlusuarios, bg=color, font=(
+    buttons = tk.Button(admin, text='Registrar !', command=registroamin, bg=color, font=(
         'Arial Rounded MT Bold', 10)).pack(side='bottom')
 
 
