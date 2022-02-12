@@ -1,3 +1,4 @@
+from playsound import playsound 
 import pathlib
 from email import message
 from select import select
@@ -8,11 +9,13 @@ from tkinter import messagebox
 import sqlite3
 from tkinter import *
 import tkinter as tk
+from turtle import left
 from PIL import Image, ImageTk
 from tkinter import messagebox as mb
 import cv2
 import os
 import imutils
+from matplotlib import image
 from numpy import *
 import numpy as np
 import time
@@ -20,6 +23,7 @@ from PIL import Image
 import sqlite3
 import xml.etree.ElementTree
 #from PIL import Image, ImageTk
+import datetime
 db = sqlite3.connect('admin.db')
 c = db.cursor()
 permiso = ''
@@ -96,7 +100,7 @@ def reconocimiento():
     dataPath = ('data')
     imagePaths = os.listdir(dataPath)
     
-
+    INSERT
     face_recognizer = cv2.face.LBPHFaceRecognizer_create()
     # leyendo el modelo
     face_recognizer.read('modelLBPHFace.xml')
@@ -115,6 +119,7 @@ def reconocimiento():
         auxFrame = gray.copy()
 
         faces = faceClassif.detectMultiScale(gray, 1.3, 5)
+        dt = str(datetime.datetime.now()) 
 
         for (x, y, w, h) in faces:
             rotro = auxFrame[y:y+h, x:x+w]
@@ -127,16 +132,16 @@ def reconocimiento():
                     imagePaths[result[0]]), (x, y-25), 2, 1.1, (0, 255, 0), 1, cv2.LINE_AA)
                 cv2.rectangle(frame, (x, y), (x+w, y+h), (255, 0, 0), 2)
                 RName = frame, '{}'.format(imagePaths[result[0]])
+                global Resultado
                 Resultado = RName[1]
                 print("resultado", Resultado)
                 if Resultado:
                     print('Ingreso Correcto')
                     print("entro")
+
                 else:
                     print('usuario desconocido')
-
-
-
+                    play
             else:
                 cv2.putText(frame, 'Desconocido', (x, y-20), 2,
                             0.8, (0, 255, 0), 1, cv2.LINE_AA)
@@ -152,6 +157,18 @@ def reconocimiento():
 
     cap.release()
     cv2.destroyAllWindows()
+def play(): 
+    print("Alerta Intruso")
+    playsound('1.mp3') 
+    cv2.destroyAllWindows()
+def AdminUsu():
+    Usu = tk.Toplevel(ventana)
+    Usu.geometry('650x558+320+0')
+    Usu.title('Administrador')
+    ventana.configure(background='white')
+    lab=Label(Usu,text="Administracion de Usuarios", font=("Cambria", 33), bg="#063970", fg="white", width="550", height="2")
+    lab.pack()
+  
 def login():
     usuario = caja1.get()
     contra = caja2.get()
@@ -173,42 +190,42 @@ def login():
                              message='Usuario o contraseña incorrecto')
 def nuevaventana():
     newVentana = tk.Toplevel(ventana)
-    newVentana.geometry('800x550+20+18')
+    newVentana.geometry('650x558+320+0')
     newVentana.title('Registro de Usuario')
-    newVentana['bg'] = color
+    ventana.configure(background='white')
     titulo=Label(newVentana,text="Registro de Usuario", font=("Cambria", 33), bg="#063970", fg="white", width="550", height="2")
     titulo.pack()
-    ce=Label(newVentana, text='Cedula: ', bg=color,font=('Arial Black', 12))
+    ce=Label(newVentana, text='Cedula: ',font=('Arial Black', 12))
     ce.place(x=22,y=130)
     ce=StringVar()
     caja3 = Entry(newVentana,textvariable=ce, width="45")
     caja3.place(x=22, y=160)
 
-    nom=Label(newVentana, text='Nombre: ', bg=color,font=('Arial Black', 12))
+    nom=Label(newVentana, text='Nombre: ',font=('Arial Black', 12))
     nom.place(x=22,y=190)
     nom=StringVar()
     caja4 = Entry(newVentana, textvariable=nom, width="45")
     caja4.place(x=22, y=220)
 
-    ap=Label(newVentana, text='Apellido: ', bg=color,font=('Arial Black', 12))
+    ap=Label(newVentana, text='Apellido: ',font=('Arial Black', 12))
     ap.place(x=22,y=250)
     ap=StringVar()
     caja5 = Entry(newVentana,textvariable=ap, width="45")
     caja5.place(x=22,y=280)
 
-    dir=Label(newVentana, text='Direccion: ', bg=color,font=('Arial Black', 12))
+    dir=Label(newVentana, text='Direccion: ',font=('Arial Black', 12))
     dir.place(x=22,y=310)
     dir=StringVar()
     caja6 = Entry(newVentana,textvariable=dir, width="45")
     caja6.place(x=22,y=340)
     
-    contra=Label(newVentana, text='contraseña: ',bg=color, font=('Arial Black', 12))
+    contra=Label(newVentana, text='contraseña: ', font=('Arial Black', 12))
     contra.place(x=22,y=370)
     contra=StringVar()
     caja7 = Entry(newVentana, show='*',textvariable=contra, width="45")
     caja7.place(x=22,y=400)
     
-    contrab=Label(newVentana, text='confirme contraseña: ',bg=color, font=('Arial Black', 12))
+    contrab=Label(newVentana, text='confirme contraseña: ', font=('Arial Black', 12))
     contrab.place(x=22,y=430)
     contrab=StringVar()
     caja8 = Entry(newVentana, show='*',textvariable=contrab, width="45")
@@ -236,12 +253,11 @@ def nuevaventana():
 
     buttons = tk.Button(newVentana, text='Registrar !', command=registro,bg="#063970", fg="white", width="30", height="2",font=('Arial Rounded MT Bold', 10))
     buttons.place(x=250, y=500)
-
 def menu():
     menu = tk.Toplevel(ventana)
-    menu.geometry('800x450+200+18')
+    menu.geometry('650x558+320+0')
     menu.title('Registro de Usuario')
-    menu['bg'] = color
+    ventana.configure(background='white')
     barraMenu = Menu(ventana)
     mnuArchivo = Menu(ventana)
     mnuAdmin = Menu(ventana)
@@ -251,8 +267,9 @@ def menu():
 # comandos
     mnuArchivo.add_command(label="Personas", command=nuevaventana)
     mnuArchivo.add_command(label="Cámaras", command= reconocimiento)
-    mnuAdmin.add_command(label="Cámaras",command=reconocimiento)
-    mnuRepor.add_command(label="Registro de usuarios", command=controlusuarios)
+    mnuAdmin.add_command(label="Usuarios",command=AdminUsu)
+    mnuRepor.add_command(label="Reportes", command=reportes)
+    mnuSegu.add_command(label="Registro de usuarios", command=controlusuarios)
     mnuSegu.add_command(label="Cámaras", command=reconocimiento)
     #mnuSalir.add.command(label="Salir")
 
@@ -282,40 +299,50 @@ def menu():
         barraMenu.add_cascade(label="Reportes", menu=mnuRepor)
         barraMenu.add_cascade(label="Salir", menu=mnuSalir)
         menu.config(menu=barraMenu)
-
 def controlusuarios():
     admin = tk.Toplevel(ventana)
-    admin.geometry('800x400+200+18')
+    admin.geometry('650x558+320+0')
     admin.title('Administrador')
-    admin['bg'] = color
+    ventana.configure(background='white')
+    tit=Label(admin,text="Registro de Admin", font=("Cambria", 33), bg="#063970", fg="white", width="550", height="2")
+    tit.pack()
     # ingreso de datos
-    Label(admin, text='Nombre: ', bg=color, font=('Arial Black', 12)).pack()
-    caja10 = Entry(admin)
-    caja10.pack()
-    Label(admin, text='Contraseña: ', bg=color,
-          font=('Arial Black', 12)).pack()
-    caja11 = Entry(admin, show='*')
-    caja11.pack()
-    Label(admin, text='Repita Contraseña: ',
-          bg=color, font=('Arial Black', 12)).pack()
-    caja12 = Entry(admin, show='*')
-    caja12.pack()
+    imagen=Image.open('admin.jpg')
+    imagen= imagen.resize((280,200), Image.ANTIALIAS)
+    photoImg=ImageTk.PhotoImage(imagen)
+    panelReg=tk.Label(admin, image=photoImg).pack(side="left")
+    dato=Label(admin, text='Nombre: ', font=('Arial Black', 12))
+    dato.place(x=22, y=190)
+    dato=StringVar
+    caja10 = Entry(admin,textvariable=dato, width="45",highlightthickness=1)
+    caja10.config(highlightbackground=color, highlightcolor=color)
+    caja10.place(x=22, y=230)
+    
+    dato1=Label(admin, text='Contraseña: ', font=('Arial Black', 12))
+    dato1.place(x=22, y= 270)
+    dato1=StringVar
+    caja11 = Entry(admin, textvariable=dato1,show='*',width="45",highlightthickness=1)
+    caja11.config(highlightbackground=color, highlightcolor=color)
+    caja11.place(x=22, y=310)
 
-    lblAnimo = Label(admin, text="Elija el persmiso").place(x=100, y=70)
+    dato2=Label(admin, text='Repita Contraseña: ', font=('Arial Black', 12))
+    dato2.place(x=22, y=350)
+    caja12=StringVar
+    caja12 = Entry(admin, textvariable=dato2, show='*',width="45")
+    caja12.config(highlightbackground=color, highlightcolor=color,highlightthickness=1)
+    caja12.place(x=22, y=390)
+
+    lblAnimo = Label(admin, text="Elija el permiso",font=('Arial Black', 12), bg="#1e81b0", fg="white", width="15", height="2")
+    lblAnimo.place(x=400, y=130)
     select = IntVar()
-    rdBAnimoE = Radiobutton(admin, text="Administrador", value=1,
-                            variable=select).place(x=100, y=100)
-# rdBAnimoE.pack()
-    rdBAnimoMB = Radiobutton(admin, text="Operador", value=2,
-                             variable=select).place(x=100, y=120)
- #   rdBAnimoMB.pack()
-    rdBAnimoM = Radiobutton(admin, text="Usuario", value=3,
-                            variable=select).place(x=100, y=140)
-  #  rdBAnimoM.pack()
-    rdBAnimoB = Radiobutton(admin, text="SuperUsuario", value=4,
-                            variable=select).place(x=100, y=160)
-   # rdBAnimoB.pack()
-
+    rdBAnimoE = Radiobutton(admin, text="Administrador", value=1,variable=select,font=("Cambria", 15))
+    rdBAnimoE.place(x=400, y=190)
+    rdBAnimoMB = Radiobutton(admin, text="Operador", value=2,variable=select,font=("Cambria", 15))
+    rdBAnimoMB.place(x=400, y=230)
+    rdBAnimoM = Radiobutton(admin, text="Usuario", value=3,variable=select,font=("Cambria", 15))
+    rdBAnimoM.place(x=400, y=270)
+    rdBAnimoB = Radiobutton(admin, text="SuperUsuario", value=4,variable=select,font=("Cambria", 15))
+    rdBAnimoB.place(x=400, y=310)
     def registroamin():
         Nombre = caja10.get()
         Contraa = caja11.get()
@@ -332,36 +359,49 @@ def controlusuarios():
         else:
             messagebox.showerror(title="Contraseña Incorrecta",
                                  message='Error¡¡¡ \n las contraseñas no coinciden.')
-    buttons = tk.Button(admin, text='Registrar !', command=registroamin, bg=color, font=(
-        'Arial Rounded MT Bold', 10)).pack(side='bottom')
-
+    bottons = Button(admin,text='Registrar !', bg="#1e81b0",command=registroamin,width="20", height="2", fg="white",font=('Arial Black', 12))
+    bottons.place(x=400, y=350)
+def reportes():
+    #print("este es el", Resultado)
+    Repo = tk.Toplevel(ventana)
+    Repo.geometry('650x558+320+0')
+    Repo.title('Administrador')
+    ventana.configure(background='white')
+    lab1=Label(Repo,text="Reportes", font=("Cambria", 33), bg="#063970", fg="white", width="550", height="2")
+    lab1.pack()
 
 ventana = tk.Tk()
 ventana.title('Reconocimiento Facial')
-ventana.geometry('650x558')
+ventana.geometry('650x558+320+0')
 ventana.resizable(False,False)
-ventana.configure(background='#213141')
-main_title=Label(text="Inicio de Sesión", font=("Cambria", 33), bg="#56CD63", fg="white", width="550", height="2")
+ventana.configure(background='white')
+main_title=Label(text="Inicio de Sesión", font=("Cambria", 33), bg="#063970", fg="white", width="550", height="2")
 main_title.pack()
-color = '#c5e2f6'
-ventana['bg'] = color
+color = '#063970'
+#ventana['bg'] = color
+imagen=Image.open('loo.jpg')
+imagen= imagen.resize((280,200), Image.ANTIALIAS)
+photoImg=ImageTk.PhotoImage(imagen)
+panel=tk.Label(ventana, image=photoImg).pack()
 
-user=Label(text="Nombre", font=('Time New Roman', 15))
-user.place(x=280, y=130)
-passw=Label(text="Contraseña", bg="#FFEEDD", font=('Time New Roman', 15))
-passw.place(x=270, y=195)
+user=Label(text="Nombre", bg="white",font=('Time New Roman', 15))
+user.place(x=280, y=330)
+passw=Label(text="Contraseña",bg="white", font=('Time New Roman', 15))
+passw.place(x=270, y=390)
 user=StringVar()
 passw=StringVar()
-caja1 = Entry(textvariable=user, width="45")
-caja2 = Entry(textvariable=passw, width="45", show="*")
-caja1.place(x=200, y =165)
-caja2.place(x=200, y=235)
+caja1 = Entry(textvariable=user, width="45",border="1",highlightthickness=1)
+caja1.config(highlightbackground=color, highlightcolor=color)
+caja2 = Entry(textvariable=passw, width="45", show="*",highlightthickness=1)
+caja2.config(highlightbackground=color, highlightcolor=color)
+caja1.place(x=200, y =360)
+caja2.place(x=200, y=420)
 
-btn=Button(ventana,text='Entrar', command=login, width="30", height="2", bg='#00CD63',font=('Arial Rounded MT Bold', 12))
-btn.place(x=200, y=280)
-mesa=Label(text="No tienes una cuenta? ", width="30", heigh="2",bg=color, font=('Arial Black', 12))
-mesa.place(x=200, y=350)
-boton1 = Button(ventana,text='Registro', bg=color,command=controlusuarios,width="30", height="2", font=('Arial Rounded MT Bold', 12))
-boton1.place(x=200, y=400)
+btn=Button(ventana,text='Entrar', command=login, width="14", height="2",fg="white", bg='#1e81b0',font=('Arial Rounded MT Bold', 12))
+btn.place(x=200, y=450)
+boton1 = Button(ventana,text='Registro', bg="#1e81b0",command=controlusuarios,width="14", fg="white",height="2", font=('Arial Rounded MT Bold', 12))
+boton1.place(x=341, y=450)
+
+
 
 ventana.mainloop()
