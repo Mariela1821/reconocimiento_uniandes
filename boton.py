@@ -16,9 +16,7 @@ def modi():
                 f"UPDATE usuarios(nacionalidad, cedula, Nombre, Apellido, Direccion, Contra)VALUES({naci},{ci},{Nombre},{Apellido},{Direccion});")
     conexion.commit()
 def eliminar():
-    cursor.execute(
-                f"DELETE FROM usuarios WHERE id={}")
-    conexion.commit()
+    pass
 
 def guardar():
     pass

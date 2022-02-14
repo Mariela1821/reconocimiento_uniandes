@@ -1,8 +1,10 @@
 #importacion de librerias 
 from distutils import command
 from distutils.log import error
-from msilib.schema import ComboBox
+from msilib.schema import ComboBox, ReserveCost
+from sys import int_info
 from tkinter import ttk
+from xml.dom import InuseAttributeErr
 from playsound import playsound 
 import pathlib
 from email import message
@@ -121,8 +123,10 @@ def reconocimiento():
     face_recognizer.read('modelLBPHFace.xml')
 
     cap = cv2.VideoCapture(0)
-    hora
-    print(hora)
+    
+    ahora=datetime.datetime.now()
+    print(ahora)
+
     #cap= cv2.VideoCapture('/home/pi/tomas/Mary.mp4')
 
     faceClassif = cv2.CascadeClassifier(
@@ -155,9 +159,10 @@ def reconocimiento():
                 if Resultado:
                     print('Ingreso Correcto')
                     print("entro")
-                    usuario=Resultado.get()
+                    
                     c.execute(
-                        f"INSERT INTO reportes (camara,fecha)values('{str(usuario)}','1');")
+                        #f"INSERT INTO reportes (camara,fecha)values('{str(usuario)}','1');"
+                        f"insert into reportes(Camara, fecha) values ('{Resultado}', datetime('now'));")
                     db.commit()
                 else:
                     print('usuario desconocido')
@@ -166,8 +171,8 @@ def reconocimiento():
                 cv2.putText(frame, 'Desconocido', (x, y-20), 2,
                             0.8, (0, 255, 0), 1, cv2.LINE_AA)
                 cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 0, 255), 2)
-                print("Alerta Intruso")
-                playsound('1.mp3') 
+                #print("Alerta Intruso")
+                #playsound('1.mp3') 
 
         if cont > 0:
             break
@@ -203,6 +208,7 @@ def AdminUsu():
     def cancelar():
         pass
     #print("este es el", Resultado)
+    
     frame =Frame(Usu)
     frame=Frame(Usu, bg="#bfdaff")
     frame.place(x=0, y = 100, width=100, height=558)
@@ -482,8 +488,17 @@ def controlusuarios():
 #formulario de reportes de inicio de cámara 
 def reportes():
     def ingresar():
-        pass
-    def modi():
+        c.execute(
+            #f"INSERT INTO reportes (camara,fecha)values('{str(usuario)}','1');"
+            "Select *from reportes")
+        for i in c.fetchall():
+            print(f'id: {i[0]}, camara[{i[1]}, fecha[{i[2]}]]')
+            #gri.insert(f"'{i[0]}",f"{i[1]}",f"{i[2]} ")
+            gri.insert("", END, text="1", values=(f"{i[1]}",f"{i[2]}"))
+            gri.insert("", END, text="1", values=("Fernanda", "14/2/2022"))
+            
+        # db.commit()}    def modi():
+            
         pass
     def eliminar():
         pass
@@ -509,11 +524,10 @@ def reportes():
     gri.heading("col1",text="Usuario", anchor=CENTER)
     gri.heading("col2",text="Fecha", anchor=CENTER)
     #gri.heading("col3",text="ID", anchor=CENTER)
-
+   
     gri.place(x=0, y =100, width=650, height=550)
-
-    gri.insert("", END, text="1", values=("Fernanda", "14/2/2022"))
-
+    boton4 = Button(Repo,text='Actualizar datos', bg="#063970",command=ingresar,width="14", fg="white",height="2", font=('Arial Rounded MT Bold', 12))
+    boton4.place(x=0, y=22)
 
 
 #ventana principal 
