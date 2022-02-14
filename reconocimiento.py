@@ -121,16 +121,12 @@ def reconocimiento():
     face_recognizer = cv2.face.LBPHFaceRecognizer_create()
     # leyendo el modelo
     face_recognizer.read('modelLBPHFace.xml')
-
+    
+    #salida=cv2.VideoCapture('VideoSalida.avi')
     cap = cv2.VideoCapture(0)
     
     ahora=datetime.datetime.now()
-    print(ahora)
-
-    #cap= cv2.VideoCapture('/home/pi/tomas/Mary.mp4')
-
-    faceClassif = cv2.CascadeClassifier(
-        'haarcascades/haarcascade_frontalface_default.xml')
+    faceClassif = cv2.CascadeClassifier('haarcascades/haarcascade_frontalface_default.xml')
     cont = 0
     while True:
         ret, frame = cap.read()
@@ -149,8 +145,7 @@ def reconocimiento():
             cv2.putText(frame, '{}'.format(result), (x, y-5),1, 1.3, (255, 255, 0), 1, cv2.LINE_AA)
 
             if result[1] < 80:
-                cv2.putText(frame, '{}'.format(
-                    imagePaths[result[0]]), (x, y-25), 2, 1.1, (0, 255, 0), 1, cv2.LINE_AA)
+                cv2.putText(frame, '{}'.format(imagePaths[result[0]]), (x, y-25), 2, 1.1, (0, 255, 0), 1, cv2.LINE_AA)
                 cv2.rectangle(frame, (x, y), (x+w, y+h), (255, 0, 0), 2)
                 RName = frame, '{}'.format(imagePaths[result[0]])
                 global Resultado
@@ -191,23 +186,17 @@ def play():
 def AdminUsu():
     
     Usu = tk.Toplevel(ventana)
-    Usu.geometry('670x570+320+0')
-    Usu.title('Administrador de usuarios ')
+    Usu.geometry('770x470+320+0')
+    Usu.title('Administrador de Personas Autorizadas')
     ventana.configure(background='white')
-    lab=Label(Usu,text="Administracion de Usuarios", font=("Cambria", 33), bg="#063970", fg="white", width="550", height="2")
+    lab=Label(Usu,text="Administracion de personas", font=("Cambria", 33), bg="#063970", fg="white", width="550", height="2")
     lab.pack()
     def ingresar():
-        pass
-    def modi():
-        pass
-    def eliminar():
-        pass
+        c.execute(
+            "Select *from usuarios")
+        for i in c.fetchall():
+            gri.insert("", END, text="1", values=(f"{i[1]}",f"{i[2]}",f"{i[3]}",f"{i[4]}",f"{i[5]}"))
 
-    def guardar():
-        pass
-    def cancelar():
-        pass
-    #print("este es el", Resultado)
     
     frame =Frame(Usu)
     frame=Frame(Usu, bg="#bfdaff")
@@ -218,54 +207,56 @@ def AdminUsu():
     frame.config(width=480, height=320)
     bot1=Button(frame, text="Nuevo", command=ingresar, bg="#063970", fg="white")
     bot1.place(x=5, y =50, width=80, height=30)
-    bot2=Button(frame, text="Modificar", command=modi, bg="#063970", fg="white")
-    bot2.place(x=5, y =100, width=80, height=30)
-    bot3=Button(frame, text="Eliminar", command=eliminar, bg="#063970", fg="white")
-    bot3.place(x=5, y =150, width=80, height=30)
+    #bot2=Button(frame, text="Modificar", command=modi, bg="#063970", fg="white")
+    #bot2.place(x=5, y =100, width=80, height=30)
+    #bot3=Button(frame, text="Eliminar", command=eliminar, bg="#063970", fg="white")
+    #bot3.place(x=5, y =150, width=80, height=30)
 
-    frame1=Frame(Usu, bg="#d3dde3")
-    frame1.place(x=95, y=100, width=150, height=558)
-    lbl=Label(frame1, text='Nacionalidad: ',font=('Arial Black', 12))
-    lbl.place(x=3,y=10)
-    txtusu=Entry(frame1)
-    txtusu.place(x=3, y = 50)
-    lbl1=Label(frame1, text='Cedula: ',font=('Arial Black', 12))
-    lbl1.place(x=3,y=90)
-    txtusu=Entry(frame1)
-    txtusu.place(x=3, y = 130)
-    lbl2=Label(frame1, text='Nombre: ',font=('Arial Black', 12))
-    lbl2.place(x=3,y=170)
-    txtusu=Entry(frame1)
-    txtusu.place(x=3, y = 210)
-    lbl3=Label(frame1, text='Apellido: ',font=('Arial Black', 12))
-    lbl3.place(x=3,y=240)
-    txtusu=Entry(frame1)
-    txtusu.place(x=3, y = 270)
-    lbl4=Label(frame1, text='Dirección: ',font=('Arial Black', 12))
-    lbl4.place(x=3,y=310)
-    txtusu=Entry(frame1)
-    txtusu.place(x=3, y = 350)
-    bot2=Button(frame1, text="Guardar", command=guardar, bg="#1e81b0", fg="white")
-    bot2.place(x=10, y =390, width=60, height=30)
-    bot3=Button(frame1, text="Cancelar", command=cancelar, bg="#1e81b0", fg="white")
-    bot3.place(x=80, y =390, width=60, height=30)
+    #frame1=Frame(Usu, bg="#d3dde3")
+    #frame1.place(x=95, y=100, width=150, height=558)
+    #lbl=Label(frame1, text='Nacionalidad: ',font=('Arial Black', 12))
+    #lbl.place(x=3,y=10)
+    #txtusu=Entry(frame1)
+    #txtusu.place(x=3, y = 50)
+    #lbl1=Label(frame1, text='Cedula: ',font=('Arial Black', 12))
+    #lbl1.place(x=3,y=90)
+    #txtusu=Entry(frame1)
+    #txtusu.place(x=3, y = 130)
+    #lbl2=Label(frame1, text='Nombre: ',font=('Arial Black', 12))
+    #lbl2.place(x=3,y=170)
+    #txtusu=Entry(frame1)
+    #txtusu.place(x=3, y = 210)
+    #lbl3=Label(frame1, text='Apellido: ',font=('Arial Black', 12))
+    #lbl3.place(x=3,y=240)
+    #txtusu=Entry(frame1)
+    #txtusu.place(x=3, y = 270)
+    #lbl4=Label(frame1, text='Dirección: ',font=('Arial Black', 12))
+    #lbl4.place(x=3,y=310)
+    #txtusu=Entry(frame1)
+    #txtusu.place(x=3, y = 350)
+    #bot2=Button(frame1, text="Guardar", command=guardar, bg="#1e81b0", fg="white")
+    #bot2.place(x=10, y =390, width=60, height=30)
+    #bot3=Button(frame1, text="Cancelar", command=cancelar, bg="#1e81b0", fg="white")
+    #bot3.place(x=80, y =390, width=60, height=30)
 
-    gri=ttk.Treeview(Usu, columns=("col1", "col2", "col3","col4"))
+    gri=ttk.Treeview(Usu, columns=("col1", "col2", "col3","col4", "col5"))
     gri.column("#0", width=50)
     gri.column("col1", width=60, anchor=CENTER)
     gri.column("col2", width=90, anchor=CENTER)
     gri.column("col3", width=90, anchor=CENTER)
     gri.column("col4", width=90, anchor=CENTER)
+    gri.column("col5", width=90, anchor=CENTER)
 
     gri.heading("#0", text="Nacionalidad",anchor=CENTER)
     gri.heading("col1", text="Cedula",anchor=CENTER)
     gri.heading("col2",text="Nombre", anchor=CENTER)
     gri.heading("col3",text="Apellido", anchor=CENTER)
     gri.heading("col4",text="Direccion", anchor=CENTER)
+    gri.heading("col5",text="Género", anchor=CENTER)
 
-    gri.place(x=247, y =100, width=500, height=350)
+    gri.place(x=100, y =100, width=500, height=350)
 
-    gri.insert("", END, text="1", values=("1789526666", "Fernanda", "Quelal", "Fernandez Salvador"))
+    #gri.insert("", END, text="1", values=("1789526666", "Fernanda", "Quelal", "Fernandez Salvador"))
 #inicio de sesion de usuarios Administradores 
 def login():
     usuario = caja1.get()
@@ -298,11 +289,12 @@ def nuevaventana():
     def cambiar():
         parro= combo.get()
         if parro=="Montufar":
-            combo2["values"]=("Fernadez Salvador", "San Gabriel")
-        if parro=="Tulcan":
-            combo2["values"]=("Fernadez Salvador", "San Gabriel")
-        if parro=="Tulcan":
-            combo2["values"]=("Fernadez Salvador", "San Gabriel")
+            combo2["values"]=("Fernadez Salvador", "San Gabriel", "La Paz", "Piartal")
+        if parro=="Tulcán":
+            combo2["values"]=("Tulcán", "Tufiño")
+
+        #if parro=="Tulcan":
+         #   combo2["values"]=("Fernadez Salvador", "San Gabriel")
     select = IntVar()
     ciecua = Radiobutton(newVentana, text="Ecuatoriano(a)", value=1,variable=select,font=("Cambria", 15))
     ciecua.place(x=22, y=130)
@@ -337,17 +329,12 @@ def nuevaventana():
     but.place(x=220, y=369 )
     combo2= ttk.Combobox(newVentana, state="readonly")
     combo2.place(x=270, y =370)
-    contra=Label(newVentana, text='contraseña: ', font=('Arial Black', 12))
-    contra.place(x=22,y=400)
-    contra=StringVar()
-    caja7 = Entry(newVentana, show='*',textvariable=contra, width="45")
-    caja7.place(x=22,y=430)
-    
-    contrab=Label(newVentana, text='confirme contraseña: ', font=('Arial Black', 12))
-    contrab.place(x=22,y=470)
-    contrab=StringVar()
-    caja8 = Entry(newVentana, show='*',textvariable=contrab, width="45")
-    caja8.place(x=22,y=510)
+    gen=Label(newVentana, text='Género: ',font=('Arial Black', 12))
+    gen.place(x=22,y=400)
+    combo3= ttk.Combobox(newVentana, state="readonly")
+    combo3.place(x=22, y= 450)
+    combo3['values']=("Femenino","Masculino")
+    combo.current(0)
     name = caja4.get()
     
     def registro():
@@ -356,22 +343,14 @@ def nuevaventana():
         Nombre = caja4.get()
         Apellido = caja5.get()
         Direccion=combo2.get()
-        ContraReg = caja7.get()
-        ContraReg2 = caja8.get()
-        if(ContraReg == ContraReg2):
-            c.execute(
-                f"INSERT INTO usuarios (nacionalidad,cedula,Nombre, Apellido, Direccion,Contra)values('{str(naci)}','{cedula}', '{Nombre}','{Apellido}','{str(Direccion)}','{ContraReg}');")
-            db.commit()
+        Genero=combo3.get()
+        c.execute(
+            f"INSERT INTO usuarios (nacionalidad,cedula,Nombre, Apellido, Direccion,Genero)values('{str(naci)}','{cedula}', '{Nombre}','{Apellido}','{str(Direccion)}','{Genero}');")
+        db.commit()
+        rostro(Nombre)
+        entrenador()
+        messagebox.showinfo(title='Registro correcto', message="Bienvenido " +Nombre+" "+Apellido+" ¡¡ \n Su registro fu exitoso.")
         
-            rostro(Nombre)
-            entrenador()
-
-            messagebox.showinfo(title='Registro correcto', message="Bienvenido " +
-                                Nombre+" "+Apellido+" ¡¡ \n Su registro fu exitoso.")
-        else:
-            messagebox.showerror(title="Contraseña Incorrecta",
-                                 message='Error¡¡¡ \n las contraseñas no coinciden.')
-
     buttons = tk.Button(newVentana, text='Registrar !', command=registro,bg="#063970", fg="white", width="30", height="2",font=('Arial Rounded MT Bold', 10))
     buttons.place(x=250, y=540)
 #Formulario menu 
@@ -495,18 +474,7 @@ def reportes():
             print(f'id: {i[0]}, camara[{i[1]}, fecha[{i[2]}]]')
             #gri.insert(f"'{i[0]}",f"{i[1]}",f"{i[2]} ")
             gri.insert("", END, text="1", values=(f"{i[1]}",f"{i[2]}"))
-            gri.insert("", END, text="1", values=("Fernanda", "14/2/2022"))
-            
-        # db.commit()}    def modi():
-            
-        pass
-    def eliminar():
-        pass
 
-    def guardar():
-        pass
-    def cancelar():
-        pass
     #print("este es el", Resultado)
     Repo = tk.Toplevel(ventana)
     Repo.geometry('650x558+320+0')
