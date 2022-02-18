@@ -1,4 +1,4 @@
-#importacion de librerias 
+#IMPORTACION DE LIBRERIAS 
 from distutils import command
 from distutils.log import error
 from msilib.schema import ComboBox, ReserveCost
@@ -36,6 +36,26 @@ db = sqlite3.connect('admin.db')
 c = db.cursor()
 permiso = ''
 getName = ''
+
+def salir():
+    salir=messagebox.askquestion("Salir", " Esta seguro de apagar la camara")
+    if salir=="yes":
+        reconocimiento.quit()
+
+def grabar():
+    captura=cv2.VideoCapture(0)
+    salida = cv2.VideoWriter('videoSalida.avi',cv2.VideoWriter_fourcc(*'XVID'),20.0,(640,480))
+    while (captura.isOpened()):
+        ret, imagen = captura.read()
+        if ret == True:
+            cv2.imshow('video', imagen)
+            salida.write(imagen)
+            if cv2.waitKey(1) & 0xFF == ord('s'):
+                break
+        else: break
+        captura.release()
+        salida.release()
+cv2.destroyAllWindows()
 #funcion para dectectar el rostro
 def rostro(Nombre):
     # global getName
@@ -45,7 +65,9 @@ def rostro(Nombre):
     if not os.path.exists(personPath):
         print('Carpeta creada: ', personPath)
         os.makedirs(personPath)
-    cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
+    url='rtsp://Fernanda:123456789@192.168.137.3:554/stream1'
+    cap=cv2.VideoCapture(url)
+    #cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
 #cap = cv2.VideoCapture('Video.mp4')
     faceClassif = cv2.CascadeClassifier(
         'haarcascades/haarcascade_frontalface_default.xml')
@@ -67,7 +89,7 @@ def rostro(Nombre):
             rostro = auxFrame[y:y+h, x:x+w]
             rostro = cv2.resize(rostro, (150, 150),
                                 interpolation=cv2.INTER_CUBIC)
-            cv2.imwrite(personPath + '/rotro_{}.jpg'.format(count), rostro)
+            cv2.imwrite(personPath + '/rostro_{}.jpg'.format(count), rostro)
             count = count + 1
         cv2.imshow('frame', frame)
 
@@ -78,7 +100,7 @@ def rostro(Nombre):
     cap.release()
     cap.release()
     cv2.destroyAllWindows()
-#entrenamiento del algoritmo con los rostros reigistrados 
+#entrenamiento del algoritmo con los rostros registrados 
 def entrenador():
 	dataPath = 'data'
 	peopleList = os.listdir(dataPath)
@@ -106,25 +128,22 @@ def entrenador():
 	face_recognizer.save('modelLBPHFace.xml')
 	print("Modelo almacenado..")
 	cv2.destroyAllWindows()
-def hora():
-    print(time.strftime)
-    ahora=datetime.datetime.now()
-    print(ahora)
-    print(type(ahora))
-    print(ahora.strftime('%d/%m/%Y %H:%M:%S'))
+def convertir():
+    print("hola")
 #inicio de camara y Reconocimiento facial 
 def reconocimiento():
     dataPath = ('data')
     imagePaths = os.listdir(dataPath)
- 
-    
+        
     face_recognizer = cv2.face.LBPHFaceRecognizer_create()
     # leyendo el modelo
     face_recognizer.read('modelLBPHFace.xml')
     
     #salida=cv2.VideoCapture('VideoSalida.avi')
-    cap = cv2.VideoCapture(0)
-    
+    #cap = cv2.VideoCapture(0)
+    url='rtsp://Fernanda:123456789@192.168.137.3:554/stream1'
+    cap=cv2.VideoCapture(url)
+        
     ahora=datetime.datetime.now()
     faceClassif = cv2.CascadeClassifier('haarcascades/haarcascade_frontalface_default.xml')
     cont = 0
@@ -136,7 +155,6 @@ def reconocimiento():
         auxFrame = gray.copy()
 
         faces = faceClassif.detectMultiScale(gray, 1.3, 5)
-        dt = str(datetime.datetime.now()) 
 
         for (x, y, w, h) in faces:
             rotro = auxFrame[y:y+h, x:x+w]
@@ -158,19 +176,34 @@ def reconocimiento():
                     c.execute(
                         #f"INSERT INTO reportes (camara,fecha)values('{str(usuario)}','1');"
                         f"insert into reportes(Camara, fecha) values ('{Resultado}', datetime('now'));")
+                        
                     db.commit()
+                    if cv2.waitKey(1) & 0xFF == ord('s'):
+                         break
                 else:
                     print('usuario desconocido')
+                    #cv2.imwrite('C:/Users/MARIELA/Videos/proyecto/desco/alerta.jpg', frame)
                    
             else:
                 cv2.putText(frame, 'Desconocido', (x, y-20), 2,
                             0.8, (0, 255, 0), 1, cv2.LINE_AA)
                 cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 0, 255), 2)
+            
+                cv2.imwrite('C:/Users/MARIELA/Videos/proyecto/desco/'+str(cont)+ ".jpg" , frame)
+            
+                ahora=datetime.datetime.now()
+                c.execute(
+                        #f"INSERT INTO reportes (camara,fecha)values('{str(usuario)}','1');"
+                        f"insert into Repo(fechadescono) values (datetime('now'));")
+                db.commit()
+                #count =
                 #print("Alerta Intruso")
                 #playsound('1.mp3') 
-
+                
         if cont > 0:
             break
+        ahora=datetime.datetime.now()
+        cv2.putText(frame, "Hora:{(datetime)}".format(ahora),(20,400),1,2,(0,255,0),2)
         cv2.imshow('frame', frame)
         k = cv2.waitKey(1)
         if k == 10:
@@ -185,10 +218,10 @@ def play():
 #Administracion de usuarios 
 def AdminUsu():
     
-    Usu = tk.Toplevel(ventana)
+    Usu = tk.Toplevel()
     Usu.geometry('770x470+320+0')
     Usu.title('Administrador de Personas Autorizadas')
-    ventana.configure(background='white')
+    Usu.configure(background='white')
     lab=Label(Usu,text="Administracion de personas", font=("Cambria", 33), bg="#063970", fg="white", width="550", height="2")
     lab.pack()
     def ingresar():
@@ -442,10 +475,6 @@ def controlusuarios():
     rdBAnimoE.place(x=400, y=190)
     rdBAnimoMB = Radiobutton(admin, text="Operador", value=2,variable=select,font=("Cambria", 15))
     rdBAnimoMB.place(x=400, y=230)
-    rdBAnimoM = Radiobutton(admin, text="Usuario", value=3,variable=select,font=("Cambria", 15))
-    rdBAnimoM.place(x=400, y=270)
-    rdBAnimoB = Radiobutton(admin, text="SuperUsuario", value=4,variable=select,font=("Cambria", 15))
-    rdBAnimoB.place(x=400, y=310)
     def registroamin():
         Nombre = caja10.get()
         Contraa = caja11.get()
@@ -469,33 +498,72 @@ def reportes():
     def ingresar():
         c.execute(
             #f"INSERT INTO reportes (camara,fecha)values('{str(usuario)}','1');"
-            "Select *from reportes")
+            "Select *from reportes order by fecha desc ")
         for i in c.fetchall():
-            print(f'id: {i[0]}, camara[{i[1]}, fecha[{i[2]}]]')
-            #gri.insert(f"'{i[0]}",f"{i[1]}",f"{i[2]} ")
             gri.insert("", END, text="1", values=(f"{i[1]}",f"{i[2]}"))
 
     #print("este es el", Resultado)
+    def actualizar():
+        c.execute(
+            "Select *from Repo order by fechadescono desc")
+        for i in c.fetchall():
+            grif.insert("", END, text="Usuario desconocido", values=(f"{i[0]}") )
+    def imagen():
+        img=Image.open('C:/Users/MARIELA/Videos/proyecto/desco/0.jpg')
+        new_img= img.resize((150, 150))
+        render= ImageTk.PhotoImage(new_img)
+        img1=Label(grif, image=render)
+        img1.image= render 
+        img1.place(x=200, y =50)
     Repo = tk.Toplevel(ventana)
-    Repo.geometry('650x558+320+0')
+    Repo.geometry('850x658+320+0')
     Repo.title('Reportes')
     Repo.configure(background='white')
     lab1=Label(Repo,text="Reportes", font=("Cambria", 33), bg="#063970", fg="white", width="550", height="2")
     lab1.pack()
-    gri=ttk.Treeview(Repo, columns=("col1", "col2", "col3"))
-    gri.column("#0", width=50)
-    gri.column("col1", width=60, anchor=CENTER)
-    gri.column("col2", width=90, anchor=CENTER)
-    gri.column("col3", width=90, anchor=CENTER)
+    
+    frame5 =Frame(Repo)
+    frame5=Frame(Repo, bg="#bfdaff")
+    frame5.place(x=0, y = 110, width=350, height=500)
+    frame5.pack
+    frame5.config(bg="lightblue")
+    frame5.config(width=480, height=320)
+    bot1=Button(frame5, text="Usuarios ", command=ingresar, bg="#063970", fg="white")
+    bot1.place(x=5, y =20, width=80, height=30)
+    
+    gri=ttk.Treeview(frame5, columns=("col1", "col2"))
+    gri.column("#0", width=10)
+    gri.column("col1", width=30, anchor=CENTER)
+    gri.column("col2", width=30, anchor=CENTER)
+    
 
-    gri.heading("#0", text="ID",anchor=CENTER)
+    gri.heading("#0", text="Id",anchor=CENTER)
     gri.heading("col1",text="Usuario", anchor=CENTER)
     gri.heading("col2",text="Fecha", anchor=CENTER)
-    #gri.heading("col3",text="ID", anchor=CENTER)
+
    
-    gri.place(x=0, y =100, width=650, height=550)
-    boton4 = Button(Repo,text='Actualizar datos', bg="#063970",command=ingresar,width="14", fg="white",height="2", font=('Arial Rounded MT Bold', 12))
-    boton4.place(x=0, y=22)
+    gri.place(x=0, y =70, width=320, height=450)
+
+    frame6=Frame(Repo, bg="#d3dde3")
+    frame6.place(x=360, y=110, width=500, height=558)
+    bot2=Button(frame6, text="Desconocidos ", command=actualizar, bg="#063970", fg="white")
+    bot2.place(x=5, y =20, width=80, height=30)
+    bot3=Button(frame6, text="Fotografia ", command=imagen, bg="#063970", fg="white")
+    bot3.place(x=20, y =20, width=80, height=30)
+
+
+    grif=ttk.Treeview(frame6, columns=("col1", "col2"))
+    grif.column("#0", width=10)
+    grif.column("col1", width=30, anchor=CENTER)
+    #grif.column("col2", width=30, anchor=CENTER)
+    
+    grif.heading("#0", text="Id",anchor=CENTER)
+    grif.heading("col1",text="Fecha", anchor=CENTER)
+    #grif.column("col2", text= "Imagen",anchor=CENTER)
+
+    grif.place(x=0, y =70, width=420, height=650)
+  
+
 
 
 #ventana principal 
@@ -532,9 +600,5 @@ boton1 = Button(ventana,text='Registro', bg="#1e81b0",command=controlusuarios,wi
 boton1.place(x=341, y=450)
 boton3 = Button(ventana,text='Enceder Cámara', bg="#063970",command=reconocimiento,width="14", fg="white",height="2", font=('Arial Rounded MT Bold', 12))
 boton3.place(x=500, y=22)
-
-
-
-
 
 ventana.mainloop()
